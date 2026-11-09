@@ -6,7 +6,7 @@ import CategoryChips from '../components/CategoryChips';
 import PromoBanner from '../components/PromoBanner';
 import Card from '../components/Card';
 import Chip from '../components/Chip';
-import { DUMMY_PRODUCTS } from '../data/dummy';
+import { DUMMY_PRODUCTS, PROMO, diskonProduk, hargaAkhir } from '../data/dummy';
 import { COLORS } from '../theme/colors';
 import { TYPE } from '../theme/typography';
 
@@ -29,7 +29,9 @@ export default function HomeScreen() {
       p.title.toLowerCase().includes(query.toLowerCase()))
     // sort() mengubah array asli, jadi salin dulu (filter sudah membuat array baru)
     .sort((a, b) =>
-      urut === 'Termurah' ? a.price - b.price : urut === 'Termahal' ? b.price - a.price : 0);
+      // urutkan berdasarkan harga SETELAH diskon (yang dilihat pengguna)
+      urut === 'Termurah' ? hargaAkhir(a) - hargaAkhir(b)
+        : urut === 'Termahal' ? hargaAkhir(b) - hargaAkhir(a) : 0);
 
   // Ketuk chip yang sama sekali lagi -> kembali ke urutan asli
   const pilihUrut = (item) => setUrut((prev) => (prev === item ? null : item));
@@ -37,10 +39,10 @@ export default function HomeScreen() {
   const header = (
     <>
       <PromoBanner
-        title="Diskon 50%"
-        subtitle="untuk semua produk fashion"
+        title={`Diskon ${PROMO.diskon}%`} // teks banner diambil dari data PROMO
+        subtitle={`untuk semua produk ${PROMO.kategori}`}
         image="https://picsum.photos/id/1059/600/200"
-        onPress={() => setKategori('fashion')}
+        onPress={() => setKategori(PROMO.kategori)}
       />
       <View style={styles.sortRow}>
         <Text style={styles.sortLabel}>Urutkan</Text>
@@ -70,7 +72,8 @@ export default function HomeScreen() {
         ListEmptyComponent={<Text style={styles.empty}>Produk tidak ditemukan</Text>}
         renderItem={({ item }) => (
           <View style={{ width: `${100 / numColumns}%` }}>
-            <Card title={item.title} price={item.price} image={item.thumbnail} />
+            <Card title={item.title} price={item.price} image={item.thumbnail}
+              discount={diskonProduk(item)} />
           </View>
         )}
       />

@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import Rating from '../components/Rating';
 import { formatRupiah } from '../components/Card';
 import { DUMMY_PRODUCTS, diskonProduk, hargaAkhir } from '../data/dummy';
+import { useFavorit } from '../context/FavoritContext';
 import { COLORS } from '../theme/colors';
 import { FONTS, TYPE } from '../theme/typography';
 
@@ -12,6 +13,8 @@ export default function DetailScreen({ route, navigation }) {
   const { id } = route.params; // hanya id yang dikirim dari Beranda
   const product = DUMMY_PRODUCTS.find((p) => p.id === id); // Modul 7: ambil dari API
   const insets = useSafeAreaInsets();
+  const { isFavorit, toggleFavorit } = useFavorit();
+  const fav = isFavorit(id);
 
   if (!product) {
     return (
@@ -50,7 +53,12 @@ export default function DetailScreen({ route, navigation }) {
       </ScrollView>
       {/* Tombol menempel di bawah layar seperti frame Detail Produk di Figma */}
       <View style={[styles.footer, { paddingBottom: insets.bottom + 16 }]}>
-        <Button title="Tambah ke Favorit" icon="heart-outline" onPress={() => {}} />
+        {/* Teks, ikon & variant berubah sesuai status favorit */}
+        <Button
+          title={fav ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}
+          icon={fav ? 'heart' : 'heart-outline'}
+          variant={fav ? 'outline' : 'primary'}
+          onPress={() => toggleFavorit(product)} />
       </View>
     </View>
   );

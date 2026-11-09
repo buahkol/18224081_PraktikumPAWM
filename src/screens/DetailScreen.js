@@ -8,13 +8,24 @@ import { DUMMY_PRODUCTS, diskonProduk, hargaAkhir } from '../data/dummy';
 import { COLORS } from '../theme/colors';
 import { FONTS, TYPE } from '../theme/typography';
 
-export default function DetailScreen() {
-  const product = DUMMY_PRODUCTS[0]; // Modul 5: dari route.params
+export default function DetailScreen({ route, navigation }) {
+  const { id } = route.params; // hanya id yang dikirim dari Beranda
+  const product = DUMMY_PRODUCTS.find((p) => p.id === id); // Modul 7: ambil dari API
   const insets = useSafeAreaInsets();
+
+  if (!product) {
+    return (
+      <View style={styles.container}>
+        <HeaderBar title="Detail Produk" onBack={() => navigation.goBack()} />
+        <Text style={styles.notFound}>Produk tidak ditemukan</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <HeaderBar title="Detail Produk" onBack={() => {}} />
+      {/* Latihan 2: judul dinamis = nama produk */}
+      <HeaderBar title={product.title} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.content}>
         <Image source={{ uri: product.thumbnail }} style={styles.image} />
         <View style={styles.categoryPill}>
@@ -50,6 +61,7 @@ const styles = StyleSheet.create({
   content: { padding: 16, paddingBottom: 24 },
   image: {
     width: '100%', aspectRatio: 1.35, // gambar mengikuti lebar layar
+    maxHeight: 320, // landscape/tablet: gambar tidak terlalu tinggi
     borderRadius: 16, backgroundColor: COLORS.primarySoft,
   },
   categoryPill: {
@@ -65,5 +77,6 @@ const styles = StyleSheet.create({
   badgeText: { fontFamily: FONTS.semibold, fontSize: 12, lineHeight: 16, color: COLORS.card },
   descTitle: { fontFamily: FONTS.semibold, fontSize: 15, lineHeight: 21, color: COLORS.text, marginTop: 20 },
   desc: { ...TYPE.small, lineHeight: 22, color: COLORS.muted, marginTop: 6 },
+  notFound: { ...TYPE.body, color: COLORS.muted, textAlign: 'center', marginTop: 40 },
   footer: { paddingHorizontal: 16, paddingTop: 8, backgroundColor: COLORS.background },
 });

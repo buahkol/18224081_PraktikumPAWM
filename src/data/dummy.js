@@ -27,3 +27,13 @@ export const DUMMY_PRODUCTS = [
     thumbnail: 'https://picsum.photos/id/175/300',
     description: 'Jam tangan pintar dengan pemantau detak jantung, langkah, dan tidur.' },
 ];
+
+// Promo yang tampil di banner Beranda. Diskon dihitung di aplikasi
+// (bukan di data produk) sehingga tetap berlaku saat data diganti API di Modul 7.
+export const PROMO = { kategori: 'fashion', diskon: 50 };
+
+// Persen diskon sebuah produk (0 jika tidak ikut promo)
+export const diskonProduk = (p) => (p.category === PROMO.kategori ? PROMO.diskon : 0);
+
+// Harga setelah diskon, dipakai untuk tampilan & pengurutan harga
+export const hargaAkhir = (p) => Math.round((p.price * (100 - diskonProduk(p))) / 100);

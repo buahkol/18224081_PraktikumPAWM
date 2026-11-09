@@ -12,9 +12,9 @@ import { TYPE } from '../theme/typography';
 
 const URUTAN = ['Termurah', 'Termahal']; // latihan 2: chip pengurutan harga
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const { width } = useWindowDimensions(); // lebar layar (dp), ikut berubah saat HP diputar
-  const numColumns = Math.max(2, Math.floor(width / 180)); // 1 kolom per ±180 dp, minimal 2
+  const numColumns = width >= 768 ? 4 : width >= 500 ? 3 : 2;
 
   const [query, setQuery] = useState('');
   const [kategori, setKategori] = useState('Semua');
@@ -36,8 +36,15 @@ export default function HomeScreen() {
   // Ketuk chip yang sama sekali lagi -> kembali ke urutan asli
   const pilihUrut = (item) => setUrut((prev) => (prev === item ? null : item));
 
+  // Kotak cari, chip, banner & urutan ikut digulir bersama grid (ListHeaderComponent),
+  // supaya saat HP diputar (landscape, layar pendek) produk tetap kelihatan.
   const header = (
     <>
+      <View style={styles.search}>
+        <CustomInput icon="search" placeholder="Cari produk..." value={query}
+          onChangeText={setQuery} style={{ marginBottom: 12 }} />
+      </View>
+      <CategoryChips items={categories} selected={kategori} onSelect={setKategori} />
       <PromoBanner
         title={`Diskon ${PROMO.diskon}%`} // teks banner diambil dari data PROMO
         subtitle={`untuk semua produk ${PROMO.kategori}`}
@@ -56,11 +63,6 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <HeaderBar title="KatalogKu" subtitle="Halo Budi, mau cari apa hari ini?" />
-      <View style={styles.search}>
-        <CustomInput icon="search" placeholder="Cari produk..." value={query}
-          onChangeText={setQuery} style={{ marginBottom: 12 }} />
-      </View>
-      <CategoryChips items={categories} selected={kategori} onSelect={setKategori} />
       <FlatList
         key={numColumns} // wajib: paksa render ulang saat jumlah kolom berubah
         data={data}
@@ -69,11 +71,14 @@ export default function HomeScreen() {
         ListHeaderComponent={header}
         ListHeaderComponentStyle={styles.listHeader}
         contentContainerStyle={styles.list}
+        keyboardShouldPersistTaps="handled"
         ListEmptyComponent={<Text style={styles.empty}>Produk tidak ditemukan</Text>}
         renderItem={({ item }) => (
           <View style={{ width: `${100 / numColumns}%` }}>
             <Card title={item.title} price={item.price} image={item.thumbnail}
-              discount={diskonProduk(item)} />
+              discount={diskonProduk(item)}
+              // Tantangan: kirim id saja, produk dicari di Detail (persiapan Modul 7)
+              onPress={() => navigation.navigate('Detail', { id: item.id })} />
           </View>
         )}
       />

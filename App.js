@@ -4,7 +4,7 @@ import {
   useFonts, Montserrat_400Regular, Montserrat_500Medium,
   Montserrat_600SemiBold, Montserrat_700Bold,
 } from '@expo-google-fonts/montserrat';
-import AppNavigator from './src/navigation/AppNavigator';
+import AppNavigator from './src/navigation/18224081_M05_AppNavigator';
 import { COLORS } from './src/theme/colors';
 
 // Modul 5: semua rute diatur di AppNavigator, App.js jadi ringkas.

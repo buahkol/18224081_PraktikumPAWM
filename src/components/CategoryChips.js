@@ -26,6 +26,6 @@ export default function CategoryChips({ items, selected, onSelect }) {
 }
 
 const styles = StyleSheet.create({
-  scroll: { flexGrow: 0 }, // jangan ambil sisa tinggi layar
+  scroll: { flexGrow: 0, flexShrink: 0 }, // jangan ambil sisa tinggi layar
   row: { paddingHorizontal: 16, paddingBottom: 12, gap: 8 }, // Chips: gap 8
 });

@@ -14,7 +14,7 @@ const URUTAN = ['Termurah', 'Termahal']; // latihan 2: chip pengurutan harga
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions(); // lebar layar (dp), ikut berubah saat HP diputar
-  const numColumns = width >= 768 ? 4 : width >= 500 ? 3 : 2;
+  const numColumns = Math.max(2, Math.floor(width / 180)); // 1 kolom per ±180 dp, minimal 2
 
   const [query, setQuery] = useState('');
   const [kategori, setKategori] = useState('Semua');

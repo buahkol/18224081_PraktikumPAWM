@@ -25,14 +25,14 @@ const styles = StyleSheet.create({
   banner: {
     height: 88, // tinggi banner di frame Beranda
     marginHorizontal: 16,
-    marginTop: 12,
+    marginTop: 6,
     marginBottom: 6,
     borderRadius: 16, // Corner radius 16
     overflow: 'hidden', // gambar ikut melengkung
     backgroundColor: COLORS.primary, // tampil jika gambar gagal dimuat
     ...shadow(COLORS.primary),
   },
-  image: { ...StyleSheet.absoluteFillObject, opacity: 0.35 },
+  image: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0.35 },
   overlay: {
     position: 'absolute', // teks di atas gambar
     top: 0, left: 0, right: 0, bottom: 0,

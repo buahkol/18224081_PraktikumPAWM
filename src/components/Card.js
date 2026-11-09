@@ -10,6 +10,9 @@ export const formatRupiah = (n) =>
 
 // Figma: Component "Card" -> props title, price, image (+ discount, rating)
 export default function Card({ title, price, image, discount, rating, onPress, style }) {
+  const diskon = Number(discount) || 0;
+  const harga = diskon ? Math.round((price * (100 - diskon)) / 100) : price; // harga setelah diskon
+
   return (
     <Pressable
       onPress={onPress}
@@ -35,7 +38,11 @@ export default function Card({ title, price, image, discount, rating, onPress, s
           {title}
         </Text>
         {rating != null ? <Rating value={rating} size={12} /> : null}
-        <Text style={styles.price}>{formatRupiah(price)}</Text>
+        <View style={styles.priceRow}>
+          <Text style={styles.price}>{formatRupiah(harga)}</Text>
+          {/* harga lama dicoret jika ada diskon */}
+          {diskon ? <Text style={styles.oldPrice}>{formatRupiah(price)}</Text> : null}
+        </View>
       </View>
     </Pressable>
   );
@@ -69,5 +76,7 @@ const styles = StyleSheet.create({
   badgeText: { fontFamily: FONTS.semibold, fontSize: 12, lineHeight: 16, color: COLORS.card },
   body: { padding: 12, gap: 4 }, // Auto layout vertikal, padding 12, gap 4
   title: { ...TYPE.small, color: COLORS.text, minHeight: 40 }, // Small 14, 2 baris = 40
+  priceRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 6 },
   price: { fontFamily: FONTS.semibold, fontSize: 15, lineHeight: 21, color: COLORS.primary },
+  oldPrice: { ...TYPE.caption, fontSize: 12, color: COLORS.muted, textDecorationLine: 'line-through' },
 });

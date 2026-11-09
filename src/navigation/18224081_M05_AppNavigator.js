@@ -9,6 +9,7 @@ import FavoritScreen from '../screens/FavoritScreen';
 import CartScreen from '../screens/CartScreen';
 import ProfilScreen from '../screens/ProfilScreen';
 import TentangScreen from '../screens/TentangScreen';
+import { useFavorit } from '../context/FavoritContext';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/typography';
 
@@ -32,6 +33,7 @@ function TabNavigator() {
   // tidak terlalu tinggi, minimal 8 untuk HP tanpa garis home.
   const insets = useSafeAreaInsets();
   const bawah = Math.max(insets.bottom - 14, 8);
+  const { favorit } = useFavorit(); // untuk badge jumlah favorit
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -54,7 +56,12 @@ function TabNavigator() {
         ),
       })}>
       <Tab.Screen name="Beranda" component={HomeScreen} />
-      <Tab.Screen name="Favorit" component={FavoritScreen} />
+      <Tab.Screen name="Favorit" component={FavoritScreen}
+        // Modul 6 latihan 2: angka di ikon Favorit (undefined = badge disembunyikan)
+        options={{
+          tabBarBadge: favorit.length || undefined,
+          tabBarBadgeStyle: { backgroundColor: COLORS.danger, color: COLORS.card, fontFamily: FONTS.semibold, fontSize: 11 },
+        }} />
       <Tab.Screen name="Keranjang" component={CartScreen} />
       <Tab.Screen name="Profil" component={ProfilScreen} />
     </Tab.Navigator>
